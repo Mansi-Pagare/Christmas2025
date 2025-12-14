@@ -68,6 +68,6 @@ if st.button("Check Santa’s List"):
 # Snow effect and festive caption
 st.snow()
 st.caption("🎄 Powered by Python & Holiday Spirit")
+st.write(f"**Why?** {reason}")
 
-        st.write(f"**Why?** {reason}")
 
