@@ -63,10 +63,8 @@ if st.button("Check Santa’s List"):
         else:
             st.error(f"🔥 {name}, you are on the NAUGHTY list!")
 
+        # Display the reason
+        st.write(f"**Why?** {reason}")
+
 # Snow effect and festive caption
 st.snow()
-
-
-
-
-
