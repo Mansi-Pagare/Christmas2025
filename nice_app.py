@@ -5,7 +5,7 @@ import random
 st.set_page_config(page_title="Santa's Naughty or Nice List 🎅", page_icon="🎄")
 
 # Title and description
-st.title("🎄🎅 Santa's Naughty or Nice List 🎄✨")
+st.title("🎄🎅 Santa's Naughty or Nice List🎄")
 st.write("Enter your name and let the code decide your fate... 🦌❄️")
 
 # Input box
@@ -68,5 +68,6 @@ if st.button("Check Santa’s List"):
 # Snow effect and festive caption
 st.snow()
 st.caption("🎄 Powered by Python & Holiday Spirit")
+
 
 
