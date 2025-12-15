@@ -9,7 +9,7 @@ st.title("🎄🎅 Santa's Naughty or Nice List")
 st.write("Enter your name and let the code decide your fate... ❄️")
 
 # Input box
-name = st.text_input("Your Name")
+name = st.text_input("Your First Name")
 
 # Full pre-decided list
 pre_decided = {
@@ -68,3 +68,4 @@ if st.button("Check Santa’s List"):
 
 # Snow effect and festive caption
 st.snow()
+
