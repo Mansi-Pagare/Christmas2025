@@ -6,7 +6,7 @@ st.set_page_config(page_title="Santa's Naughty or Nice List 🎅", page_icon="�
 
 # Title and description
 st.title("🎄🎅 Santa's Naughty or Nice List")
-st.write("Enter your name and let the code decide your fate... ❄️")
+st.write("Enter your name and my code decide your fate... ❄️")
 
 # Input box
 name = st.text_input("Your First Name")
@@ -68,4 +68,5 @@ if st.button("Check Santa’s List"):
 
 # Snow effect and festive caption
 st.snow()
+
 
