@@ -1,0 +1,23 @@
+body {
+    margin: 0;
+    text-align: center;
+    font-family: 'Comic Sans MS', cursive;
+    background: linear-gradient(#0f2027, #203a43, #2c5364);
+    color: white;
+}
+
+h1 {
+    margin-top: 20px;
+}
+
+canvas {
+    background: #b3e5fc;
+    border-radius: 16px;
+    margin: 20px auto;
+    display: block;
+}
+
+#result {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
