@@ -1,8 +1,16 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = 350;
-canvas.height = 400;
+// 🔹 Responsive canvas
+function resizeCanvas() {
+    const size = Math.min(window.innerWidth * 0.95, 400);
+    canvas.width = size;
+    canvas.height = size * 1.15;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+const splatSound = document.getElementById("splatSound");
 
 const coworkers = [
     "Mansi", "Bruce", "Shannon", "Loretta",
@@ -16,49 +24,40 @@ let snowballs = [];
 let splats = [];
 let snowflakes = [];
 
-// create snowflakes
-for (let i = 0; i < 50; i++) {
-    snowflakes.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: Math.random() * 3 + 2,
-        speed: Math.random() * 1.5 + 0.5
-    });
+// ❄️ Create snowflakes
+function createSnowflakes() {
+    snowflakes = [];
+    for (let i = 0; i < 50; i++) {
+        snowflakes.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 3 + 2,
+            speed: Math.random() * 1.5 + 0.5
+        });
+    }
 }
+createSnowflakes();
 
-// Base Snowball Class
+// 🎯 Snowball class
 class Snowball {
-    constructor() {
+    constructor(color = "white", radius = 10, sticky = false) {
         this.x = 30;
         this.y = Math.random() * (canvas.height - 80) + 40;
-        this.radius = 10;
+        this.radius = radius;
         this.speed = 7;
+        this.color = color;
+        this.sticky = sticky;
     }
 
     update() {
         this.x += this.speed;
         if (this.x > canvas.width - 40) {
-            createSplat(this.x, this.y);
-            showResult();
+            createSplat(this.x, this.y, this.color, this.sticky ? 60 : 30);
+            playSplat();
+            showResult(this.sticky);
             return false;
         }
         return true;
-    }
-
-    draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "white";
-        ctx.fill();
-    }
-}
-
-// Chocolate Snowball (sticky effect)
-class ChocolateSnowball extends Snowball {
-    constructor() {
-        super();
-        this.color = "brown";
-        this.radius = 12;
     }
 
     draw() {
@@ -67,26 +66,16 @@ class ChocolateSnowball extends Snowball {
         ctx.fillStyle = this.color;
         ctx.fill();
     }
-
-    update() {
-        this.x += this.speed;
-        if (this.x > canvas.width - 40) {
-            createSplat(this.x, this.y, "brown", 60);
-            showResult(true);
-            return false;
-        }
-        return true;
-    }
 }
 
-// Splat class
+// 💥 Splat effect
 class Splat {
-    constructor(x, y, color = "white", life = 30) {
+    constructor(x, y, color, life) {
         this.life = life;
         this.color = color;
         this.particles = [];
 
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 10; i++) {
             this.particles.push({
                 x,
                 y,
@@ -102,7 +91,7 @@ class Splat {
         this.particles.forEach(p => {
             p.x += p.dx;
             p.y += p.dy;
-            p.dy += 0.2; // gravity
+            p.dy += 0.25;
         });
     }
 
@@ -116,45 +105,40 @@ class Splat {
     }
 }
 
-// create splat
-function createSplat(x, y, color = "white", life = 30) {
+// ➕ Create splat
+function createSplat(x, y, color, life) {
     splats.push(new Splat(x, y, color, life));
 }
 
-// show hit result + play sounds
+// 🔊 Play splat sound (single sound for all)
+function playSplat() {
+    splatSound.currentTime = 0;
+    splatSound.play();
+}
+
+// 📝 Show result
 function showResult(isChocolate = false) {
     const target = coworkers[Math.floor(Math.random() * coworkers.length)];
+
     const messages = isChocolate
         ? [
-            `🍫 Chocolate SPLAT! ${target} got chocolate’d !!`,
-            `😂 ${target} is now covered in chocolate snow!`,
+            `🍫 Chocolate SPLAT! ${target} got chocolate’d!!`,
+            `😂 ${target} is now suspiciously sticky.`,
+            `😳 ${target} regrets standing there.`
         ]
         : [
             `❄️ SPLAT! ${target} got nailed!`,
             `💥 Snow explosion on ${target}!`,
             `😂 ${target} was NOT ready for that!`,
             `☃️ ${target} is officially buried in snow!`,
-            `😱 Direct hit! ${target} may never emotionally recover.`,
-            `🎯 Bullseye! ${target} walked straight into that snowball.`
+            `🎯 Bullseye! ${target} never saw it coming.`
         ];
 
-    // Play sounds
-    if (isChocolate) {
-        const jingle = document.getElementById("jingleSound");
-        jingle.currentTime = 0;
-        jingle.play();
-    } else {
-        const splat = document.getElementById("splatSound");
-        splat.currentTime = 0;
-        splat.play();
-    }
-
-    // display message
     document.getElementById("result").innerText =
         messages[Math.floor(Math.random() * messages.length)];
 }
 
-// draw snowflakes
+// ❄️ Draw snowflakes
 function drawSnowflakes() {
     snowflakes.forEach(f => {
         ctx.beginPath();
@@ -166,20 +150,17 @@ function drawSnowflakes() {
     });
 }
 
-// main draw loop
+// 🔁 Animation loop
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // draw snowflakes
     drawSnowflakes();
 
-    // update + draw snowballs
     snowballs = snowballs.filter(ball => {
         ball.draw();
         return ball.update();
     });
 
-    // update + draw splats
     splats = splats.filter(splat => {
         splat.update();
         splat.draw();
@@ -189,11 +170,20 @@ function draw() {
     requestAnimationFrame(draw);
 }
 
-// click to throw
-canvas.addEventListener("click", () => {
-    let snowballType = Math.random() < 0.2 ? new ChocolateSnowball() : new Snowball();
-    snowballs.push(snowballType);
+// 👆 Click & tap to throw
+function throwSnowball() {
+    const isChocolate = Math.random() < 0.2;
+    const ball = isChocolate
+        ? new Snowball("brown", 12, true)
+        : new Snowball();
+    snowballs.push(ball);
+}
+
+canvas.addEventListener("click", throwSnowball);
+canvas.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    throwSnowball();
 });
 
-// start animation
+// 🚀 Start
 draw();
