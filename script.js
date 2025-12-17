@@ -17,7 +17,7 @@ const coworkers = [
     "Cole", "Adrianna", "Ashley", "Mandi",
     "Don", "Atiana", "Sheralyn", "Dave",
     "Mark", "Jason", "Stephanie", "Chasity",
-    "Trever"
+    "Trever", "Kristi"
 ];
 
 let snowballs = [];
@@ -187,3 +187,4 @@ canvas.addEventListener("touchstart", (e) => {
 
 // 🚀 Start
 draw();
+
